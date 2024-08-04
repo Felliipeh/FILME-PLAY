@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>filme play</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <header>
+        <div class="title">
+          <a href="./index.html">  <h1><img src="./img/PLAY.png" alt="" width="30PX" height="30PX"> FILME PLAY</h1> </a>
+        </div>
+
+        <form id="form_busca">
+            <input type="text" name="PESQUISA" id="busca" placeholder="DIGITE O NOME DO FILME">
+            <button type="submit" id="btn_lupa">
+                <img src="./img/lupa.png" alt="buscar" id="icon">
+            </button>
+        </form>
+    </header>
+    <main>
+        <h2><img class="icon_fogo" src="./img/fogo.png" alt="" width="30px" height="30px">TOP 10 filmes de hoje no Brasil <img class="icon_fogo" src="./img/fogo.png" alt="" width="30px" height="30px"></h2>
+
+        <div class="card">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </main>
+    <footer>
+        &copy; FILME PLAY
+    </footer>
+    <script>
+        const apikey = "becce500";
+        const frmpesquisa = document.querySelector("form");
+
+        frmpesquisa.onsubmit = (ev) => {
+            ev.preventDefault();
+
+            const PESQUISA = ev.target.PESQUISA.value;
+            if (PESQUISA == "") {
+                alert("preencha o campo!");
+                return;
+            }
+
+            fetch(`https://www.omdbapi.com/?apikey=${apikey}&s=${PESQUISA}`)
+                .then(result => result.json())
+                .then(json => carregarLista(json));
+        }
+
+        const carregarLista = (json) => {
+            const lista = document.querySelector("div.card");
+            lista.innerHTML = ""; // Limpar resultados anteriores
+
+            if (json.Response === "True") {
+                json.Search.forEach(element => {
+                    console.log(element);
+
+                    let item = document.createElement("div");
+                    item.classList.add("item");
+
+                    item.innerHTML = `<img src="${element.Poster}" alt="${element.Title}"/><h3>${element.Title}</h3>`;
+
+                    lista.appendChild(item);
+                });
+            } else {
+                alert("Nenhum filme encontrado!");
+            }
+        }
+    </script>
+</body>
+</html>
